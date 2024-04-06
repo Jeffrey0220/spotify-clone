@@ -23,7 +23,6 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
   const router = useRouter();
   const supabaseClient = useSupabaseClient();
   const { user } = useUser();
-  console.log("uuu", user);
 
   const handleLogout = async () => {
     const { error } = await supabaseClient.auth.signOut();
