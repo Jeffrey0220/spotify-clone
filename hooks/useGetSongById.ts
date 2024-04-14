@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 const useGetSongById = (id?: string) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [song, setSong] = useState<Song | undefined>();
+  const [song, setSong] = useState<Song | undefined>(undefined);
   const { supabaseClient } = useSessionContext();
 
   useEffect(() => {
