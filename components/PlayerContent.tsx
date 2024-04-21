@@ -19,11 +19,15 @@ interface PlayerContentProps {
 const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
   const player = usePlayer();
   const [volume, setVolume] = useState(1);
+  const [prevVolume, setPrevVolume] = useState(1);
   const [isPlaying, setIsPlaying] = useState(false);
   const Icon = isPlaying ? BsPauseFill : BsPlayFill;
   const VolumIcon = volume === 0 ? HiSpeakerXMark : HiSpeakerWave;
 
   const onPlayNext = () => {
+    console.log("111", prevVolume);
+    console.log("111222", volume);
+
     if (player.ids.length === 0) {
       return;
     }
@@ -55,7 +59,9 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
 
   const [play, { pause, sound }] = useSound(songUrl, {
     volume: volume,
-    onplay: () => setIsPlaying(true),
+    onplay: () => {
+      setIsPlaying(true);
+    },
     onend: () => {
       setIsPlaying(false);
       onPlayNext();
@@ -65,7 +71,9 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
   });
 
   useEffect(() => {
-    sound?.play();
+    if (sound) {
+      sound?.play();
+    }
 
     return () => {
       sound?.unload();
@@ -82,9 +90,10 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
 
   const toggleMute = () => {
     if (volume === 0) {
-      setVolume(1);
+      setVolume(prevVolume);
     } else {
-      setVolume(0);
+      setPrevVolume(volume); // Store the current volume before muting
+      setVolume(0); // Set volume to zero to mute
     }
   };
 
@@ -132,7 +141,13 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
             className="cursor-pointer"
             size={34}
           />
-          <Slider value={volume} onChange={(value) => setVolume(value)} />
+          <Slider
+            value={volume}
+            onChange={(value) => {
+              setVolume(value);
+              setPrevVolume(value);
+            }}
+          />
         </div>
       </div>
     </div>
